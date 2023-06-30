@@ -2,8 +2,13 @@ import numpy as np
 
 parent_pairs = [(0, 0), (1, 0), (2, 0), (17, 0), (18, 0), (3, 1), (4, 2), (5, 18), (6, 18), (19, 18), (11, 19), (12, 19), (7, 5), (8, 6), (9, 7), (10, 8), (13, 11), (14, 12), (15, 13), (16, 14), (24, 15), (25, 16), (20, 24), (22, 24), (21, 25), (23, 25)]
 
-
-    
+def get_flattened_pose_repr(json_data):
+    flattened_reprs = []
+    for data in json_data:
+        size = data['size']
+        pose = data['keypoints'][0]
+        flattened_reprs.append(keypoints2representation(pose, size)['pose'].flatten())
+    return np.array(flattened_reprs)
 
 
 '''

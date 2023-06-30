@@ -5,22 +5,24 @@ import numpy as np
 import cv2
 import datetime
 import random 
-INPUT_JSON = "../sandbox/datas/pose_cluster_dbscan_result_06260035.json"
+INPUT_JSON = "../sandbox/datas/pose_cluster_dbscan_result_06261107.json"
 IMG_DIR = "../sandbox/datas/all_images/"
 
 data_json = file_utils.read_json(INPUT_JSON)
 
 print("params:",data_json['params'])
 print("cluster count:",data_json['n_clusters'], "noise points:", data_json['n_noise'])
-winsize = (150,150)
-MAX_IMG_COUNT = 6
+winsize = (100,100)
+MAX_IMG_COUNT = 16
 
 window = []
 for key in data_json['groups']:
     group = data_json['groups'][key]
     images = []
-    random.shuffle(group)
+    #random.shuffle(group)
     print(key,':',len(group))
+    if key=='0':
+        print(group[:10])
     for name in data_json['groups'][key][:MAX_IMG_COUNT]:
         img = cv2.resize(cv2.imread(IMG_DIR + name), dsize = winsize)
         images.append(img)

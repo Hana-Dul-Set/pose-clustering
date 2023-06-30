@@ -23,8 +23,6 @@ counts = list(counts.values())
 print(min(counts))
 print(max(counts))
 
-exit()
-
 print()
 
 window = []

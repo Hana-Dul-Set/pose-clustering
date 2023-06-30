@@ -36,8 +36,6 @@ kmeans.fit(np.array(featuremaps))
 print("Kmeans done")
 result = kmeans.predict(np.array(featuremaps))
 
-
-
 distances = kmeans.get_average_distance(np.array(featuremaps), result)
 print(distances)
 

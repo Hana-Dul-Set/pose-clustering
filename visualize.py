@@ -5,9 +5,11 @@ import numpy as np
 import cv2
 
 
-INPUT_JSON = "../datas/random/pose_dataset_random.json"
-IMG_DIR = "../datas/random/images/"
+INPUT_JSON = "../sandbox/datas/pose_cluster_kmeans_result_06261819.json"
+REFERENCE_JSON = "../sandbox/datas/filtered_photo_data_0622.json"
+IMG_DIR = "../sandbox/datas/all_images/"
 
+reference_json = file_utils.read_json(REFERENCE_JSON)
 data_json = file_utils.read_json(INPUT_JSON)
 p_color = [(0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0, 255, 0),  # Nose, LEye, REye, LEar, REar
            (77, 255, 255), (77, 255, 204), (77, 204, 255), (191, 255, 77), (77, 191, 255), (191, 255, 77),  # LShoulder, RShoulder, LElbow, RElbow, LWrist, RWrist
@@ -18,8 +20,18 @@ p_color = [(0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0, 255, 0
 parent_pairs = [(0, 0), (1, 0), (2, 0), (17, 0), (18, 0), (3, 1), (4, 2), (5, 18), (6, 18), (19, 18), (11, 19), (12, 19), (7, 5), (8, 6), (9, 7), (10, 8), (13, 11), (14, 12), (15, 13), (16, 14), (24, 15), (25, 16), (20, 24), (22, 24), (21, 25), (23, 25)]
 
 
-    
-for data in data_json:
+selected_names = []
+selected_names.append(data_json['groups']['0'][8])
+selected_names.append(data_json['groups']['0'][12])
+selected_names.append(data_json['groups']['0'][13])
+
+selected_data = []
+for k in reference_json:
+    if k['name'] in selected_names:
+        selected_data.append(k)
+
+
+for data in selected_data:
     image = cv2.imread(IMG_DIR + data['name'])
     size = data['size']
 
@@ -53,5 +65,6 @@ for data in data_json:
 
     result_image = cv2.hconcat([pose_image, norm_image])
     cv2.imshow(data['name'], result_image)
+    cv2.imwrite('images/'+data['name'], result_image)
     cv2.waitKey(0)
     
