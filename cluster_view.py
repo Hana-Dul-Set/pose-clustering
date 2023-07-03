@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 
-import file_utils
+import utils.file_utils as file_utils
 CLUSTER_JSON = "../sandbox/datas/pose_cluster_kmeans_result_06261725.json"
 DATA_JSON = "../sandbox/datas/filtered_photo_data_0622.json"
 IMG_DIR = "../sandbox/datas/all_images/"

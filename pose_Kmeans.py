@@ -1,6 +1,6 @@
 from kmeans import KMeans
 import math
-import file_utils, pose_utils
+import utils.file_utils as file_utils, utils.pose_utils as pose_utils
 import numpy as np
 import cv2
 import datetime

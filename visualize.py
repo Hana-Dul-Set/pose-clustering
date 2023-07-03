@@ -1,5 +1,5 @@
-import file_utils
-import pose_utils
+import utils.file_utils as file_utils
+import utils.pose_utils as pose_utils
 
 import numpy as np
 import cv2
