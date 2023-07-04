@@ -3,9 +3,9 @@ import tkinter
 from PIL import Image
 from PIL import ImageTk
 
-import utils11.image_utils as image_utils
-import utils11.file_utils as file_utils
-import utils11.pose_utils as pose_utils
+import myutils.image_utils as image_utils
+import myutils.file_utils as file_utils
+import myutils.pose_utils as pose_utils
 
 
 class Cv2ToggleImageLabel(tkinter.Frame):
@@ -43,7 +43,7 @@ keypoints_data = file_utils.read_json('../sandbox/datas/random/pose_dataset_rand
 image_DIR = '../sandbox/datas/random/images/'
 
 window=tkinter.Tk()
-window.title("YUN DAE HEE")
+window.title("Pose distance viewer")
 window.geometry("1280x720+100+100")
 imagesize = (400,400)
 
@@ -73,8 +73,8 @@ def get_distance_and_image(image_name1, image_name2):
     repr2 = pose_utils.keypoints2representation(data2['keypoints'][0], data2['size'])
 
     black_image = image_utils.black_image(imagesize)
-    pose_utils.render_representation(black_image, repr1, True, (0,0,255))
-    pose_utils.render_representation(black_image, repr2, True, (0,255,0))
+    pose_utils.render_representation(black_image, repr1, True, (0,0,255), lines = 1)
+    pose_utils.render_representation(black_image, repr2, True, (0,255,0), lines = 1)
     
     distance = pose_utils.distance(repr1['pose'].flatten(), repr2['pose'].flatten())
 

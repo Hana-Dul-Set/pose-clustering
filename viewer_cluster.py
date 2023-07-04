@@ -8,7 +8,7 @@ import datetime
 from tqdm import tqdm
 import random 
 
-CLUSTER_JSON = "../sandbox/datas/pose_cluster_kmeans_result_06261819.json"
+CLUSTER_JSON = "../sandbox/datas/pose_cluster_dbscan_result_06261107.json"
 POSE_JSON = "../sandbox/datas/filtered_photo_data_0622.json"
 IMG_DIR = "../sandbox/datas/all_images/"
 OUTPUT_PATH = "result.jpg"
@@ -47,20 +47,20 @@ if DO_RENDER:
             reprs.append(pose_utils.keypoints2representation(data['keypoints'][0], data['size']))
         average_repr = pose_utils.get_average_repr(reprs)
         pose_img = image_utils.black_image(image_size)
-        pose_img = pose_utils.render_representation(pose_img, average_repr, withids=True, withlines=True)
+        pose_img = pose_utils.render_representation(pose_img, average_repr, color = None, withids=True, lines=1)
         images.append(pose_img)
         for name in cluster_data['groups'][key][:MAX_IMG_COUNT]:
             img = cv2.resize(cv2.imread(IMG_DIR + name), dsize = image_size)
             images.append(img)
         
         image_row = cv2.hconcat(images)
-        if MAX_IMG_COUNT > len(images):
+
+        if MAX_IMG_COUNT > len(images)-1:
             black = np.zeros((image_size[0], image_size[1], 3), dtype = np.uint8)
-            for i in range(MAX_IMG_COUNT - len(images)):
+            for i in range(MAX_IMG_COUNT - (len(images)-1)):
                 image_row = cv2.hconcat([image_row, black])
         cv2.putText(image_row, str(key), (10,10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 1, cv2.LINE_AA)
         window.append(image_row)
-        
     result_image = cv2.vconcat(window)
     cv2.imwrite(OUTPUT_PATH, result_image)
     print("Saved image in", OUTPUT_PATH)

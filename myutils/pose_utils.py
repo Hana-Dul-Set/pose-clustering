@@ -39,7 +39,7 @@ def render_keypoints(cvimage, keypoints, withids):
             cv2.putText(cvimage, str(i), position, cv2.FONT_HERSHEY_SIMPLEX, 0.5,  keypoint_colors[i], 2, cv2.LINE_AA)
     return cvimage
 
-def render_representation(cvimage, repr, withids, color = None, withlines = False):
+def render_representation(cvimage, repr, withids, color = None, lines = 0):
     positions = [[0,0] for x in range(26)]
     positions[0] = repr['pose'][0]
     for pair in parent_pairs:
@@ -52,7 +52,6 @@ def render_representation(cvimage, repr, withids, color = None, withlines = Fals
     #    positions[i][0] += 0.5
     #    positions[i][1] += 0.5
     size = (cvimage.shape[1], cvimage.shape[0])
-    color = keypoint_colors[i] if color == None else color
 
     
     left =  int(min(positions, key=lambda x:x[0])[0] * size[0])
@@ -64,12 +63,15 @@ def render_representation(cvimage, repr, withids, color = None, withlines = Fals
     for i in range(26):
         positions[i] = (int(positions[i][0] * size[0]), int(positions[i][1]*size[1]))
     for i in range(26):
+        if color == None:  color = keypoint_colors[i]
         cv2.circle(cvimage, positions[i], 3,  color, -1)
         if withids:
             cv2.putText(cvimage, str(i), positions[i], cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA)
-    if withlines:
+    if lines > 0:
         for pair in parent_pairs:
-            cv2.line(cvimage, positions[pair[0]], positions[pair[1]], keypoint_colors[pair[1]], 2)
+            if color == None:  color = keypoint_colors[i]
+            i = pair[1]
+            cv2.line(cvimage, positions[pair[0]], positions[pair[1]], color, lines)
     return cvimage
 
 def render_keypoints_in_frame(cvimage, keypoints, withids, border_size:tuple):
