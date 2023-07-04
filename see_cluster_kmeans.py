@@ -1,6 +1,6 @@
 import sklearn.cluster
 import math
-import utils.file_utils as file_utils, utils.pose_utils as pose_utils
+import myutils.file_utils as file_utils, myutils.pose_utils as pose_utils
 import numpy as np
 import cv2
 import datetime
@@ -44,5 +44,7 @@ for key in data_json['groups']:
     window.append(image_row)
     
 result_image = cv2.vconcat(window)
+cv2.imwrite("result.jpg",result_image)
 cv2.imshow(str(key), result_image)
+
 cv2.waitKey(0)

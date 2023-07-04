@@ -3,9 +3,9 @@ import tkinter
 from PIL import Image
 from PIL import ImageTk
 
-import utils.image_utils as image_utils
-import utils.file_utils as file_utils
-import utils.pose_utils as pose_utils
+import utils11.image_utils as image_utils
+import utils11.file_utils as file_utils
+import utils11.pose_utils as pose_utils
 
 
 class Cv2ToggleImageLabel(tkinter.Frame):
@@ -39,16 +39,16 @@ class Cv2ToggleImageLabel(tkinter.Frame):
     
 
 
-keypoints_data = file_utils.read_json('../datas/random/pose_dataset_random.json')
-image_DIR = '../datas/random/images/'
+keypoints_data = file_utils.read_json('../sandbox/datas/random/pose_dataset_random.json')
+image_DIR = '../sandbox/datas/random/images/'
 
 window=tkinter.Tk()
 window.title("YUN DAE HEE")
 window.geometry("1280x720+100+100")
 imagesize = (400,400)
 
-image_name1 = "N_671654999113663838680061646740.jpg"
-image_name2 = "i_33179.jpg"
+image_name1 = "f_4466520453-46288281@N05.jpg"
+image_name2 = "f_5348386558-27124343@N00.jpg"
 
 def get_data(image_name):
     return next(x for x in keypoints_data if x['name'] == image_name)
