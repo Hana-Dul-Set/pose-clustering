@@ -100,6 +100,9 @@ def distance(A, B):
     b = B.reshape((B.size//2, 2))
     return np.mean(np.linalg.norm(a - b, axis = 1))
 
+def get_data(image_name, json_data):
+    return next(x for x in json_data if x['name'] == image_name)
+
 '''
 Distance of person
 - Face size
