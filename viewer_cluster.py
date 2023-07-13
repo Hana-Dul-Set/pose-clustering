@@ -8,9 +8,9 @@ import datetime
 from tqdm import tqdm
 import random 
 
-CLUSTER_JSON = "../sandbox/datas/pose_cluster_dbscan_result_06261107.json"
-POSE_JSON = "../sandbox/datas/filtered_photo_data_0622.json"
-IMG_DIR = "../sandbox/datas/all_images/"
+CLUSTER_JSON = "../datas/pose_cluster_kmeans_result_07140354.json"
+POSE_JSON = "../datas/filtered_photo_data_0622.json"
+IMG_DIR = "../datas/all_images/"
 OUTPUT_PATH = "result.jpg"
 DO_RENDER = True
 

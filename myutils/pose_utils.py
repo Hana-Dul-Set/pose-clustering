@@ -10,6 +10,8 @@ keypoint_colors = [(0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0
            (77, 255, 255), (0, 255, 255), (77, 204, 255),  # head, neck, shoulder
            (0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0, 255, 0), (77, 255, 255)] # foot
 
+score_threshold = 0.5
+
 def get_average_repr(reprs : list):
     average = {}
     #face_size
@@ -95,10 +97,19 @@ def get_flattened_pose_repr(json_data):
     return np.array(flattened_reprs)
 
 
+feet = [25, 23, 21, 24, 20, 22]
+face = [0, 1, 2, 3, 4, 17, 18]
 def distance(A, B):
-    a = A.reshape((A.size//2, 2))
-    b = B.reshape((B.size//2, 2))
-    return np.mean(np.linalg.norm(a - b, axis = 1))
+    a = A.reshape((A.size//3, 3))
+    b = B.reshape((B.size//3, 3))
+
+    distances = np.linalg.norm(a - b, axis = 1)
+    for i in feet:
+        distances[i] *= 0.1
+    for i in face:
+        distances[i] *= 1 / len(face)
+    
+    return np.sum(distances)
 
 def get_data(image_name, json_data):
     return next(x for x in json_data if x['name'] == image_name)
@@ -127,6 +138,7 @@ def keypoints2representation(keypoints, size):
     #relative positions
     pose = np.array([[key[0] * size[0], key[1] * size[1]] for key in keypoints[:26]])
     #pose = (pose - pose.min(axis = 0)) / (pose.max(axis = 0) - pose.min(axis = 0)) #pose bounding box
+
     #pose square box
     width= pose.max(axis = 0)[0] - pose.min(axis = 0)[0]
     height= pose.max(axis = 0)[1] - pose.min(axis = 0)[1]
@@ -136,7 +148,17 @@ def keypoints2representation(keypoints, size):
     else:
         pose = (pose - pose.min(axis = 0)) / width
         pose[:,1] += 0.5 - height/width/2
-        
+
+    #make relative    
     for pair in parent_pairs.__reversed__():
         pose[pair[0]] -= pose[pair[1]]
-    return {'face_size':face_size, 'nose_pos': nose_pos, 'pose':pose}
+    
+    #add score info
+    pose = [[point[0], point[1], keypoints[i][2]] for i, point in enumerate(pose.tolist())]
+    for i, point in enumerate(pose):
+        if point[2] > score_threshold:
+            pose[i][2] = 0
+        else:
+            pose[i] = [0, 0, 2]
+
+    return {'face_size':face_size, 'nose_pos': nose_pos, 'pose':np.array(pose)}
