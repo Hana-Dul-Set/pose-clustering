@@ -1,10 +1,12 @@
 import numpy as np
 class KMeans:
     
-    def __init__(self, n_clusters, dist_fn, mean_fn):
+    def __init__(self, n_clusters, dist_fn, mean_fn, random_seed):
         self.K = n_clusters
         self.dist_fn = dist_fn
         self.mean_fn = mean_fn
+        np.random.seed(random_seed)
+        self.random_seed = random_seed
         
     def fit(self, X):
         self.centroids = X[np.random.choice(len(X), self.K, replace=False)]
@@ -41,5 +43,3 @@ class KMeans:
     def update_centroid(self, X):
         self.centroids = np.array([self.mean_fn(X[self.labels == k])  for k in range(self.K)])
 
-
-    

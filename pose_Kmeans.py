@@ -4,11 +4,14 @@ import myutils.file_utils as file_utils, myutils.pose_utils as pose_utils
 import numpy as np
 import cv2
 import datetime
+from tqdm import tqdm
+import random
 
 INPUT_JSON = "../datas/filtered_photo_data_0622.json"
 IMG_DIR = "../datas/all_images/"
 
-
+K = 75
+EPOCHS = 10
 CLUSTER_RESULT_OUTPUT = f"../datas/pose_cluster_kmeans_result_{datetime.datetime.today().strftime('%m%d%H%M')}.json"
 data_json = file_utils.read_json(INPUT_JSON)
 
@@ -18,17 +21,22 @@ featuremaps = pose_utils.get_flattened_pose_repr(data_json)
 def mean(samples):
     return (np.mean(samples, axis = (0)))
 
-print("Kmeans start")
+best_kmeans = None
+best_kmeans_distance = None
+for epoch in tqdm(range(EPOCHS)):
 
-K = 50
-kmeans = KMeans(K, pose_utils.distance, mean)
-kmeans.fit(np.array(featuremaps))
+    kmeans = KMeans(K, pose_utils.distance, mean, epoch * 42)
+    kmeans.fit(np.array(featuremaps))
 
-print("Kmeans done")
-result = kmeans.predict(np.array(featuremaps))
+    result = kmeans.predict(np.array(featuremaps))
+    distances = kmeans.get_average_distance(np.array(featuremaps), result)
+    
+    if best_kmeans == None or best_kmeans_distance > distances:
+        best_kmeans = kmeans
+        best_kmeans_distance = distances
 
-distances = kmeans.get_average_distance(np.array(featuremaps), result)
-print(distances)
+kmeans = best_kmeans
+distances = best_kmeans_distance
 
 groups = {}
 for i, label in enumerate(result):
