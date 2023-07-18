@@ -10,7 +10,7 @@ keypoint_colors = [(0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0
            (77, 255, 255), (0, 255, 255), (77, 204, 255),  # head, neck, shoulder
            (0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0, 255, 0), (77, 255, 255)] # foot
 
-score_threshold = 0.33
+score_threshold = 0.1
 
 def get_average_repr(reprs : list):
     average = {}
@@ -152,9 +152,6 @@ def keypoints2representation(keypoints, size):
         pose = (pose - pose.min(axis = 0)) / width
         pose[:,1] += 0.5 - height/width/2
 
-    #make relative    
-    for pair in parent_pairs.__reversed__():
-        pose[pair[0]] -= pose[pair[1]]
     
     #add score info
     pose = [[point[0], point[1], keypoints[i][2]] for i, point in enumerate(pose.tolist())]
@@ -163,5 +160,10 @@ def keypoints2representation(keypoints, size):
             pose[i][2] = 0
         else:
             pose[i] = [0, 0, 2]
+    
+    #make relative    
+    for pair in parent_pairs.__reversed__():
+        pose[pair[0]][0] -= pose[pair[1]][0]
+        pose[pair[0]][1] -= pose[pair[1]][1]
 
     return {'face_size':face_size, 'nose_pos': nose_pos, 'pose':np.array(pose)}
