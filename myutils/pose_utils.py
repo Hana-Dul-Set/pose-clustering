@@ -10,7 +10,7 @@ keypoint_colors = [(0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0
            (77, 255, 255), (0, 255, 255), (77, 204, 255),  # head, neck, shoulder
            (0, 255, 255), (0, 191, 255), (0, 255, 102), (0, 77, 255), (0, 255, 0), (77, 255, 255)] # foot
 
-score_threshold = 0.5
+score_threshold = 0.33
 
 def get_average_repr(reprs : list):
     average = {}
@@ -99,7 +99,7 @@ def get_flattened_pose_repr(json_data):
 
 feet = [25, 23, 21, 24, 20, 22]
 face = [0, 1, 2, 3, 4, 17, 18]
-def distance(A, B):
+def distance_list(A, B):
     a = A.reshape((A.size//3, 3))
     b = B.reshape((B.size//3, 3))
 
@@ -108,8 +108,11 @@ def distance(A, B):
         distances[i] *= 0.1
     for i in face:
         distances[i] *= 1 / len(face)
-    
-    return np.sum(distances)
+    return distances
+    #return np.sum(distances)
+
+def distance(A, B):
+    return np.sum(distance_list(A, B))
 
 def get_data(image_name, json_data):
     return next(x for x in json_data if x['name'] == image_name)

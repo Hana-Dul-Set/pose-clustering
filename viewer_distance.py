@@ -39,16 +39,16 @@ class Cv2ToggleImageLabel(tkinter.Frame):
     
 
 
-keypoints_data = file_utils.read_json('../sandbox/datas/random/pose_dataset_random.json')
-image_DIR = '../sandbox/datas/random/images/'
+keypoints_data = file_utils.read_json('../datas/filtered_photo_data_0622.json')
+image_DIR = '../datas/all_images/'
 
 window=tkinter.Tk()
 window.title("Pose distance viewer")
 window.geometry("1280x720+100+100")
 imagesize = (400,400)
 
-image_name1 = "f_4466520453-46288281@N05.jpg"
-image_name2 = "f_5348386558-27124343@N00.jpg"
+image_name1 = "f_4904804442-40571405@N08.jpg"
+image_name2 = "f_4900624511-14382533@N07.jpg"
 
 def get_data(image_name):
     return next(x for x in keypoints_data if x['name'] == image_name)
@@ -76,9 +76,9 @@ def get_distance_and_image(image_name1, image_name2):
     pose_utils.render_representation(black_image, repr1, True, (0,0,255), lines = 1)
     pose_utils.render_representation(black_image, repr2, True, (0,255,0), lines = 1)
     
-    distance = pose_utils.distance(repr1['pose'].flatten(), repr2['pose'].flatten())
+    distances = pose_utils.distance_list(repr1['pose'].flatten(), repr2['pose'].flatten())
 
-    return distance, black_image
+    return distances, black_image
 
 def on_check():
     global image_label1, image_label2, checkvar1, checkvar2
@@ -104,7 +104,11 @@ def on_return(event):
 
     distance, black_image = get_distance_and_image(image_name1, image_name2)
     distance_text.delete('1.0', tkinter.END)
-    distance_text.insert(tkinter.END, str(distance))
+    distance_string = str(np.sum(distance)) + '\n'
+    for i in range(distance.shape[0]):
+        distance_string += str(i) + " : " + str(distance[i]) + '\n'
+        
+    distance_text.insert(tkinter.END, distance_string)
     distance_image.reinit([black_image])
 
 window.bind('<Return>', on_return)
@@ -154,7 +158,14 @@ distance_image.pack(side="top")
 
 distance_text = tkinter.Text(distance_view, font = "24", height = 50)
 distance_text.pack(side="top")
-distance_text.insert(tkinter.END, str(distance))
+
+import numpy as np
+
+distance_string = str(np.sum(distance)) + '\n'
+for i in range(distance.shape[0]):
+    distance_string += str(i) + " : " + str(distance[i]) + '\n'
+
+distance_text.insert(tkinter.END, distance_string)
 #textbox2 = tkinter.Entry(image_view2, textvariable=str, font="24")
 #textbox2.pack(side="bottom", expand=True, fill='both')
 

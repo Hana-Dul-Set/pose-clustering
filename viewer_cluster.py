@@ -8,11 +8,11 @@ import datetime
 from tqdm import tqdm
 import random 
 
-CLUSTER_JSON = "../datas/pose_cluster_kmeans_result_07140354.json"
+CLUSTER_JSON = "../datas/results/pose_cluster_kmeans_result_07181943.json"
 POSE_JSON = "../datas/filtered_photo_data_0622.json"
 IMG_DIR = "../datas/all_images/"
 OUTPUT_PATH = "result.jpg"
-DO_RENDER = True
+DO_RENDER = False
 
 image_size = (200,200)
 MAX_IMG_COUNT = 10

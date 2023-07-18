@@ -12,9 +12,9 @@ WINDOW_NAME = "Pose test"
 pose_data = file_utils.read_json(POSE_JSON)
 
 IMG_DIR = "../datas/all_images/"
-IMAGE_NAME = "f_30559546753-145610464@N06.jpg"
+IMAGE_NAME = "f_4779719403-9536690@N08.jpg"
 
-WINDOW_SIZE = (800,800)
+WINDOW_SIZE = (1024,800)
 
 def render_keypoints(cvimage, keypoints, border_size):
     left, top, right, bottom = border_size
@@ -33,7 +33,8 @@ print(border)
 image = image_utils.resize_with_black_borders(image, WINDOW_SIZE)
 keypoints = pose_utils.get_data(IMAGE_NAME, pose_data)['keypoints'][0]
 
-image =  render_keypoints(image, keypoints, border)
+image = pose_utils.render_keypoints_in_frame(image, keypoints, True, border)
+
 
 cv2.imshow(WINDOW_NAME, image)
 cv2.waitKey(0)
